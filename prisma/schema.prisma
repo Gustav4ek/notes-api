@@ -14,4 +14,14 @@ model Note {
   tags        String[]
   createdAt   DateTime @default(now())
   location    String
+  userId      Int
+  user        User     @relation(fields: [userId], references: [id])
+}
+
+model User {
+  id       Int    @id @default(autoincrement())
+  username String @unique
+  email    String @unique
+  password String
+  notes    Note[]
 }
