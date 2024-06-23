@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { DatabaseService} from "../database/database.service";
 import { CreateNoteDto } from "./dto/create-note.dto";
-import { UpdateNoteDTO } from "./dto/update-note.dto";
+import { UpdateNoteDto } from "./dto/update-note.dto";
 
 @Injectable()
 export class NotesService {
@@ -48,7 +48,7 @@ export class NotesService {
       return this.prisma.note.findUnique({where: {id}})
   }
 
-  async update(id: number, updateNoteDto: UpdateNoteDTO) {
+  async update(id: number, updateNoteDto: UpdateNoteDto) {
       return this.prisma.note.update({where: {id}, data: updateNoteDto})
   }
 
