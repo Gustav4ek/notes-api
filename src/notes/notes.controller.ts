@@ -28,7 +28,7 @@ export class NotesController {
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   @UseGuards(JwtAuthGuard)
   @Get()
-  findAll(@Query() query: any) {
+  findAll(@Query() query: FindNotesQuery) {
     return this.notesService.findAll(query)
   }
 

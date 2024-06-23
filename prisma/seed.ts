@@ -1,18 +1,20 @@
 import { PrismaClient } from '@prisma/client';
 import { faker } from '@faker-js/faker';
+import * as bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
 
-async function main() {
+async function registration() {
   const userCount = 100;
   const notesPerUser = 10;
 
   for (let i = 0; i < userCount; i++) {
+    const password = await bcrypt.hash(faker.internet.password(), 7);
     const user = await prisma.user.create({
       data: {
         username: faker.internet.userName(),
         email: faker.internet.email(),
-        password: faker.internet.password(),
+        password: password,
       },
     });
 
@@ -35,11 +37,11 @@ async function main() {
   }
 }
 
-main()
-  .catch((e) => {
-    console.error(e);
-    process.exit(1);
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
-  });
+registration()
+    .catch((e) => {
+      console.error(e);
+      process.exit(1);
+    })
+    .finally(async () => {
+      await prisma.$disconnect();
+    });

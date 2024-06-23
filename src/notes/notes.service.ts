@@ -24,17 +24,24 @@ export class NotesService {
     })
   }
 
-  async findAll(query: any) {
-    const {page = 1, limit = 10, search = '', tags = '', sortBy = 'createdAt', order = 'desc'} = query
+  async findAll(query: FindNotesQuery) {
+    const {page = 1, limit = 10, search = '', tags = '', sortBy = 'id', order = 'asc'} = query
     const skip = (page-1)*limit
+
+    let tagsArray: string[] = [];
+    if (tags) {
+      tagsArray = tags.split(',');
+    }
 
     return this.prisma.note.findMany({
       where: {
         OR: [
-          { title: { contains: search } },
-          { description: { contains: search } },
-          { tags: { hasSome: tags.split(',') } },
+          { title: { contains: search, mode: "insensitive" } },
+          { description: { contains: search, mode: "insensitive" } },
         ],
+        tags: {
+          hasSome: tagsArray
+        }
       },
       orderBy: {
         [sortBy]: order,
