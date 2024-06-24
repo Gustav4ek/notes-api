@@ -36,6 +36,7 @@ export class UsersController {
     return this.userService.findOne(+id)
   }
 
+
   @ApiOperation({ summary: 'Update a user by ID' })
   @ApiParam({ name: 'id', type: String, description: 'User ID' })
   @ApiBody({ type: UpdateUserDto })
