@@ -37,3 +37,6 @@
 ## Docker-compose
 docker-compose up --build
 
+## Swagger api/docs
+ 
+
