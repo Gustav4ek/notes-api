@@ -4,7 +4,6 @@ import { ApiProperty } from "@nestjs/swagger";
 
 export class CreateUserDto {
 
-
   @ApiProperty({
     description: 'Username of the user',
     example: 'gustav4ek',
@@ -25,7 +24,7 @@ export class CreateUserDto {
 
   @ApiProperty({
     description: 'Password for the user account, must be between 5 and 10 characters',
-    example: 'password123',
+    example: 'pass123',
   })
   @IsString()
   @Length(5, 10)

@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Patch, Delete, Body, Query, Param, UseGuards } from "@nestjs/common";
+import {Controller, Post, Get, Patch, Delete, Body, Query, Param, UseGuards, Req} from "@nestjs/common";
 import { NotesService } from "./notes.service";
 import { CreateNoteDto } from "./dto/create-note.dto";
 import { UpdateNoteDto } from "./dto/update-note.dto";
@@ -18,8 +18,8 @@ export class NotesController {
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   @UseGuards(JwtAuthGuard)
   @Post()
-  create(@Body() createNoteDto: CreateNoteDto) {
-    return this.notesService.create(createNoteDto)
+  create(@Req() req: any,@Body() createNoteDto: CreateNoteDto) {
+    return this.notesService.create(+req.user.id, createNoteDto)
   }
 
   @ApiOperation({ summary: 'Retrieve all notes' })
@@ -28,8 +28,8 @@ export class NotesController {
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   @UseGuards(JwtAuthGuard)
   @Get()
-  findAll(@Query() query: FindNotesQuery) {
-    return this.notesService.findAll(query)
+  findAll(@Req() req: any ,@Query() query: FindNotesQuery) {
+    return this.notesService.findAll(+req.user.id, query)
   }
 
   @ApiOperation({ summary: 'Retrieve a single note by ID' })
@@ -39,8 +39,8 @@ export class NotesController {
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   @UseGuards(JwtAuthGuard)
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.notesService.findOne(+id)
+  findOne(@Req() req: any,@Param('id') noteId: string) {
+    return this.notesService.findOne(+req.user.id, +noteId)
   }
 
   @ApiOperation({ summary: 'Update a note by ID' })
@@ -51,8 +51,8 @@ export class NotesController {
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   @UseGuards(JwtAuthGuard)
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateNoteDto: UpdateNoteDto) {
-    return this.notesService.update(+id, updateNoteDto)
+  update(@Req() req: any,@Param('id') id: string, @Body() updateNoteDto: UpdateNoteDto) {
+    return this.notesService.update(+req.user.id,+id, updateNoteDto)
   }
 
   @ApiOperation({ summary: 'Delete a note by ID' })
@@ -62,8 +62,8 @@ export class NotesController {
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  delete(@Param('id') id: string) {
-    return this.notesService.delete(+id)
+  delete(@Req() req: any,@Param('id') id: string) {
+    return this.notesService.delete(+req.user.id,+id)
   }
 
 

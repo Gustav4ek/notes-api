@@ -24,12 +24,12 @@ export class AuthService {
       const user = await this.userService.create({...createUserDto, password: hashPassword})
       return this.generateToken(user)
     } catch (e) {
-      throw new HttpException('Пользователь с таким email/username уже существует', HttpStatus.BAD_REQUEST)
+      throw new HttpException('email/username already exists', HttpStatus.BAD_REQUEST)
     }
   }
 
   private async generateToken(user: User) {
-    const payload = {email: user.email, id: user.id}
+    const payload = {id: user.id}
     return {
       token: this.jwtService.sign(payload)
     }
@@ -37,10 +37,13 @@ export class AuthService {
 
   private async validateUser(createUserDto: CreateUserDto) {
     const user = await this.userService.findByEmail(createUserDto.email)
+    if (!user) {
+      throw new UnauthorizedException({ message: 'User not found' });
+    }
     const passwordEquals = await bcrypt.compare(createUserDto.password, user.password)
     if (user && passwordEquals) {
       return user
     }
-    throw new UnauthorizedException({message: 'Неккоректный email или password'})
+    throw new UnauthorizedException({message: 'Incorrect email/password'})
   }
 }

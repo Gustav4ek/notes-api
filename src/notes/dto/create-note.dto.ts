@@ -44,13 +44,4 @@ export class CreateNoteDto {
   @IsString()
   readonly location?: string
 
-
-  @ApiProperty({
-    description: 'ID of the user who created the note',
-    example: 1
-  })
-  @IsNumber()
-  @IsNotEmpty()
-  readonly userId: number;
-
 }
