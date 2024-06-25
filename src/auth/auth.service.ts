@@ -4,6 +4,7 @@ import { JwtService } from "@nestjs/jwt";
 import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from "../users/dto/create-user.dto";
 import { User } from "@prisma/client";
+import {LoginDto} from "./dto/login.dto";
 @Injectable()
 export class AuthService {
 
@@ -13,12 +14,12 @@ export class AuthService {
     ) {}
 
 
-  async login(createUserDto: CreateUserDto) {
-    const user = await this.validateUser(createUserDto)
+  async login(loginDto: LoginDto) {
+    const user = await this.validateUser(loginDto)
     return this.generateToken(user)
   }
 
-  async registration(createUserDto: CreateUserDto) {
+  async register(createUserDto: CreateUserDto) {
     try {
       const hashPassword = await bcrypt.hash(createUserDto.password, 7)
       const user = await this.userService.create({...createUserDto, password: hashPassword})
@@ -35,12 +36,12 @@ export class AuthService {
     }
   }
 
-  private async validateUser(createUserDto: CreateUserDto) {
-    const user = await this.userService.findByEmail(createUserDto.email)
+  private async validateUser(loginDto: LoginDto) {
+    const user = await this.userService.findByEmail(loginDto.email)
     if (!user) {
       throw new UnauthorizedException({ message: 'User not found' });
     }
-    const passwordEquals = await bcrypt.compare(createUserDto.password, user.password)
+    const passwordEquals = await bcrypt.compare(loginDto.password, user.password)
     if (user && passwordEquals) {
       return user
     }
